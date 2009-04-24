@@ -1,7 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+from django.contrib.sites.models import Site
 
 class ProjectManager(models.Manager):
+    def get_query_set(self):
+        return super(ProjectManager, self).get_query_set().filter(site__exact=Site.objects.get_current())
+
     def active(self):
         return self.get_query_set().filter(is_active=True)
 
@@ -20,6 +26,7 @@ class Project(models.Model):
     members = models.ManyToManyField(User, through='Membership')
     is_public = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    site = models.ForeignKey(Site, default=Site.objects.get_current)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -28,40 +35,33 @@ class Project(models.Model):
     class Meta:
         ordering = ('parent', 'name',)
 
-class Role(models.Model):
+class Attribute(models.Model):
     name = models.CharField(max_length=30)
     slug = models.SlugField()
-    permissions = models.ManyToManyField(Permission)
 
     class Meta:
         ordering = ('name',)
+        abstract = True
+
+class Role(Attribute):
+    permissions = models.ManyToManyField(Permission)
 
 class Membership(models.Model):
     project = models.ForeignKey(Project)
     user = models.ForeignKey(User)
     role = models.ForeignKey(Role)
 
-class Tracker(models.Model):
-    name = models.CharField(max_length=30)
-    slug = models.SlugField()
+class Tracker(Attribute):
+    pass
 
-    class Meta:
-        ordering = ('name',)
-
-class Status(models.Model):
-    name = models.CharField(max_length=30)
-    slug = models.SlugField()
-
-    class Meta:
-        ordering = ('name',)
+class Status(Attribute):
+    pass
 
 class PriorityManager(models.Manager):
     def default(self):
         return self.get_query_set().get(is_default=True)
 
-class Priority(models.Model):
-    name = models.CharField(max_length=30)
-    slug = models.SlugField()
+class Priority(Attribute):
     is_default = models.BooleanField(default=False)
 
     objects = PriorityManager()
@@ -73,16 +73,8 @@ class Priority(models.Model):
 
         super(Priority, self).save(*args, **kwargs)
 
-    class Meta:
-        ordering = ('name',)
-
-class Category(models.Model):
+class Category(Attribute):
     project = models.ForeignKey(Project)
-    name = models.CharField(max_length=30)
-    slug = models.SlugField()
-
-    class Meta:
-        ordering = ('name',)
 
 class Ticket(models.Model):
     project = models.ForeignKey(Project, related_name='tickets')
@@ -103,14 +95,14 @@ class Ticket(models.Model):
 
 class Log(models.Model):
     ticket = models.ForeignKey(Ticket)
-    old_status = models.ForeignKey(Status, related_name='old_statuses')
-    new_status = models.ForeignKey(Status, related_name='new_statuses')
-    old_priority = models.ForeignKey(Priority, related_name='old_priorities')
-    new_priority = models.ForeignKey(Priority, related_name='new_priorities')
-    old_assigned_to = models.ForeignKey(User, related_name='old_assignees')
-    new_assigned_to = models.ForeignKey(User, related_name='new_assignees')
-    old_category = models.ForeignKey(Category, related_name='old_categories')
-    new_category = models.ForeignKey(Category, related_name='new_categories')
-    old_completion = models.CharField(max_length=4)
-    new_completion = models.CharField(max_length=4)
+    notes = models.TextField(blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+class ChangeLog(models.Model):
+    log = models.ForeignKey(Log, related_name='changes')
+    content_type = models.ForeignKey(ContentType)
+    old_id = models.PositiveIntegerField()
+    new_id = models.PositiveIntegerField()
+    old_object = generic.GenericForeignKey(ct_field='content_type', fk_field='old_id')
+    new_object = generic.GenericForeignKey(ct_field='content_type', fk_field='new_id')
