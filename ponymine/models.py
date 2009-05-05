@@ -31,6 +31,7 @@ class Project(models.Model):
     
     def get_absolute_url(self):
         return ('ponymine_view_project', [], {'path': self.get_path_list()})
+    get_absolute_url = models.permalink(get_absolute_url)
     
     def get_path_list(self):
         """
@@ -101,9 +102,9 @@ class Status(Attribute):
         """
         if self.is_default:
             # mark all other priorities as not being the default
-            Priority.objects.exclude(pk=self.id).update(is_default=False)
+            Status.objects.exclude(pk=self.id).update(is_default=False)
 
-        super(Priority, self).save(*args, **kwargs)
+        super(Status, self).save(*args, **kwargs)
     
     class Meta:
         ordering = ('name',)
