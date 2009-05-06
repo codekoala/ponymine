@@ -6,4 +6,15 @@
 {% block content %}
 <h2>{% trans 'Overview' %}</h2>
 
+<fieldset>
+	<legend>Projects</legend>
+	
+	{{ projects.page.object_list }}
+</fieldset>
+
+<fieldset>
+	<legend>Latest Tickets</legend>
+
+	{{ tickets.page.object_list }}
+</fieldset>
 {% endblock %}

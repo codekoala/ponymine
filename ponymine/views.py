@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render_to_response as render, get_object_or_404
 from django.template import RequestContext
@@ -8,7 +9,18 @@ def overview(request, template='ponymine/overview.html'):
     Offers a quick overview of the goings on in Ponymine to the user.
     """
     
-    return render(template, {}, context_instance=RequestContext(request))
+    # get 5 projects
+    proj_paginator = Paginator(Project.objects.all(), 5, orphans=3)
+    proj_page = proj_paginator.page(1)
+    
+    # get 5 latest tickets
+    tick_paginator = Paginator(Ticket.objects.all(), 5)
+    tick_page = tick_paginator.page(1)
+    
+    return render(template, {
+                    'projects': {'paginator': proj_paginator, 'page': proj_page},
+                    'tickets': {'paginator': tick_paginator, 'page': tick_page},
+                  }, context_instance=RequestContext(request))
 
 def view_project(request, path, template="ponymine/project_detail.html"):
     """
