@@ -1,3 +1,4 @@
 syntax: glob
 *.pyc
 ponymine.tmproj
+projects/*/*.db
