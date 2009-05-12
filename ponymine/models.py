@@ -28,7 +28,7 @@ class Project(models.Model):
     
     def __unicode__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return ('ponymine_view_project', [], {'path': self.get_path_list()})
     get_absolute_url = models.permalink(get_absolute_url)

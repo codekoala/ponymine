@@ -8,13 +8,29 @@
 
 <fieldset>
 	<legend>Projects</legend>
-	
-	{{ projects.page.object_list }}
+
+	<ul>
+	{% for project in projects.page.object_list %}
+		<li>
+			<a href="{{ project.get_absolute_url }}">
+				{{ project.name }}
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
 </fieldset>
 
 <fieldset>
 	<legend>Latest Tickets</legend>
 
-	{{ tickets.page.object_list }}
+	<ul>
+	{% for ticket in tickets.page.object_list %}
+		<li>
+			<a href="{{ ticket.get_absolute_url }}">
+				{{ ticket.name }}
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
 </fieldset>
 {% endblock %}
