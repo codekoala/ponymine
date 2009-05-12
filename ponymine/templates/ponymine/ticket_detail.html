@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ticket.subject }}{% endblock %}
+
+{% block content %}
+
+<h2>{{ ticket.subject }}</h2>
+
+<div id="ticket_options">
+	<a href="edit/">Edit</a>
+</div>
+
+<p>{{ ticket.description }}</p>
+
+{% endblock %}
