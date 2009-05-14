@@ -1,5 +1,20 @@
 from django.contrib.contenttypes.models import ContentType
-from ponymine.models import Log, ChangeLog
+from ponymine.models import Log, ChangeLog, Project
+
+def get_project_or_new(path):
+    """
+    Attempts to find a project described by `path`.  If one cannot be found,
+    an empty Project object is returned.
+    """
+    project = None
+
+    if path:
+        project = Project.objects.with_path(path)
+
+    # `with_path` may return None, so this ensures that we always have a project
+    project = project or Project()
+
+    return project
 
 def create_change_logs(request, old_ticket, new_ticket, notes=''):
     """

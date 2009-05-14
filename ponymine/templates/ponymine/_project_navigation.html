@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if project.id %}
+<div class="project-navigation">
+    <ul>
+        <li>
+            <a href="{% url ponymine_view_project_summary project.path %}" title="{% trans 'Project Summary' %}" class="view-project">{% trans 'Project Summary' %}</a>
+        </li>
+        <li>
+            <a href="#" title="{% trans 'Roadmap' %}" class="project-roadmap">{% trans 'Roadmap' %}</a>
+        </li>
+        <li>
+            <a href="{% url ponymine_view_project_tickets project.path %}" title="{% trans 'View tickets' %}" class="btn-view view-tickets">{% trans 'Tickets' %}</a>
+        </li>
+        <li>
+            <a href="{% url ponymine_create_ticket project.path %}" title="{% trans 'Create a new ticket' %}" class="btn-add add-ticket">{% trans 'New Ticket' %}</a>
+        </li>
+        {% if perms.ponymine.configure_project %}
+        <li>
+            <a href="{% url ponymine_configure_project project.path %}" title="{% trans 'Change project settings' %}" class="btn-configure project-settings">{% trans 'Settings' %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

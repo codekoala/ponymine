@@ -1,0 +1,47 @@
+{% extends 'ponymine/base_project.html' %}
+{% load i18n %}
+
+{% block ponymine-project-content %}
+<div class="project-details">
+    <div class="description">{{ project.description }}</div>
+    {% if project.homepage %}
+    <div class="homepage">
+        <strong>Homepage</strong>: {{ project.homepage }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="member-summary">
+    <h3>{% trans 'Members' %}</h3>
+
+    {% for name,users in roles %}
+    {% if forloop.first %}<ul>{% endif %}
+        <li>
+            <strong>{{ name }}</strong>: {% for u in users %}
+            {{ u }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </li>
+    {% if forloop.last %}</ul>{% endif %}
+    {% endfor %}
+</div>
+
+<div class="ticket-summary">
+    <h3>{% trans 'Tickets' %}</h3>
+
+    {% for type,vals in ticket_types %}
+    {% if forloop.first %}<ul>{% endif %}
+        <li>
+            <strong>{{ type }}</strong>: {{ vals.0 }} {% trans 'out of' %}
+            {{ vals.1 }} {% trans 'tickets are open' %}
+        </li>
+    {% if forloop.last %}</ul>{% endif %}
+    {% endfor %}
+</div>
+
+{% if project.subprojects.count %}
+<div class="subprojects">
+{% with project.subprojects.active as project_list %}
+{% include 'ponymine/_project_table.html' %}
+{% endwith %}
+</div>
+{% endif %}
+{% endblock %}

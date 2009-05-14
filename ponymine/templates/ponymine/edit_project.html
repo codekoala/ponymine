@@ -1,11 +1,7 @@
-{% extends 'ponymine/base.html' %}
+{% extends 'ponymine/base_project.html' %}
 {% load i18n %}
 
-{% block title %}{% if project.id %}{% trans 'Edit Project' %}{% else %}{% trans 'New Project' %}{% endif %}{% endblock %}
-
-{% block ponymine-content %}
-<h2>{% if project.id %}{% trans 'Edit Project' %}{% else %}{% trans 'New Project' %}{% endif %}</h2>
-
+{% block ponymine-project-content %}
 <form action="." method="post">
     <table class="project-form">
         {{ form }}

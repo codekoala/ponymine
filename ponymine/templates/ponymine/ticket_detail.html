@@ -1,9 +1,7 @@
-{% extends "ponymine/base.html" %}
+{% extends "ponymine/base_project.html" %}
 {% load i18n %}
 
-{% block title %}{% trans 'Ticket' %} {{ ticket.id }}: {{ ticket.subject }} ({{ ticket.project }}){% endblock %}
-
-{% block ponymine-content %}
+{% block ponymine-project-content %}
 <div class="ticket-info">
     <h2>{{ ticket.ticket_type }} #{{ ticket.id }}</h2>
     <h3>{{ ticket.subject }}</h3>

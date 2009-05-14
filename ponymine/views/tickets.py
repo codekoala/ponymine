@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response as render, get_object_or_404
 from django.template import RequestContext
+from django.utils.translation import ugettext_lazy as _
 from ponymine.forms import TicketForm, UpdateTicketForm, ChangeStatusForm
 from ponymine.models import Project, Ticket, Status
 from ponymine import utils
@@ -16,6 +17,7 @@ def view_ticket(request, ticket_id, template='ponymine/ticket_detail.html'):
     data = {}
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
+    data['title'] = ticket.__unicode__()
     data['ticket'] = ticket
     data['project'] = ticket.project
     data['change_status_form'] = ChangeStatusForm()
@@ -29,6 +31,11 @@ def create_ticket(request, path, template='ponymine/edit_ticket.html',
     Wraps `edit_ticket` so that we can use a different decorator
     """
     project = Project.objects.with_path(path)
+
+    # you should never create a ticket when not looking at a specific project
+    if not project:
+        raise Http404
+
     return edit_ticket(request,
                        project=project,
                        template=template,
@@ -62,6 +69,7 @@ def edit_ticket(request, ticket_id=None, project=None,
             new_ticket = form.save(commit=False)
             if not new_ticket.id:
                 new_ticket.reported_by = request.user
+                new_ticket.project = project
             new_ticket.save()
 
             # log any differences between the tickets
@@ -87,6 +95,7 @@ def edit_ticket(request, ticket_id=None, project=None,
     members = User.objects.filter(pk__in=project_member_ids)
     form.limit_assignable_users(members)
 
+    data['title'] = ticket.id and _('Update Ticket') or _('New Ticket')
     data['form'] = form
     data['project'] = project
 
@@ -103,6 +112,7 @@ def tickets_with_keyword(request, keyword, page=1,
     paginator = Paginator(tickets, 50, orphans=5)
     page_obj = paginator.page(page)
 
+    data['title'] = _('Search Results')
     data['page'] = page_obj
     data['paginator'] = paginator
     data['object_list'] = page_obj.object_list

@@ -1,0 +1,12 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if project.id %}{{ project.name }}: {% endif %}{{ title }}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% if project.id %}{{ project.name }}: {% endif %}{{ title }}</h2>
+
+{% include 'ponymine/_project_navigation.html' %}
+
+{% block ponymine-project-content %}{% endblock %}
+{% endblock %}

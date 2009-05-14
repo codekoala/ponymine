@@ -4,10 +4,15 @@ from forms import UpdateTicketForm
 
 urlpatterns = patterns('',
     url(r'^project/new/$', projects.create_project, name='ponymine_create_project'),
+    url(r'^project/(?P<path>.+)/settings/$', projects.configure_project,
+        name='ponymine_configure_project'),
     url(r'^project/(?P<path>.+)/edit/$', projects.edit_project, name='ponymine_edit_project'),
-    url(r'^project/(?P<path>.+)/$', projects.view_project, name='ponymine_view_project'),
-    url(r'^project/(?P<path>.+)/page/(?P<page>\d+)/$', projects.view_project,
-        name='ponymine_view_project_page'),
+    url(r'^project/(?P<path>.+)/tickets/$', projects.view_project_tickets,
+        name='ponymine_view_project_tickets'),
+    url(r'^project/(?P<path>.+)/tickets/page/(?P<page>\d+)/$', projects.view_project_tickets,
+        name='ponymine_view_project_ticket_page'),
+    url(r'^project/(?P<path>.+)/$', projects.project_summary,
+        name='ponymine_view_project_summary'),
 
     url(r'^projects/(?P<page>\d+)/$', projects.project_list, name='ponymine_project_list_page'),
     url(r'^projects/$', projects.project_list, name='ponymine_project_list'),

@@ -13,18 +13,12 @@
         <li>
             <a href="{% url ponymine_project_list %}">{% trans 'Projects' %}</a>
         </li>
-        {% if project.id %}
-        <li>
-            <a href="{% url ponymine_view_project project.path %}" title="{% trans 'Project homepage' %}" class="view-project">{% trans 'Project Summary' %}</a>
-        </li>
-        <li>
-            <a href="{% url ponymine_create_ticket project.path %}" title="{% trans 'Create a new ticket' %}" class="btn-add add-ticket">{% trans 'New Ticket' %}</a>
-        </li>
-        {% endif %}
-        {% if user.is_authenticated %}
+        {% if perms.ponymine.create_project %}
         <li>
             <a href="{% url ponymine_create_project %}" title="{% trans 'Create a new project' %}" class="btn-add add-project">{% trans 'New Project' %}</a>
         </li>
+        {% endif %}
+        {% if user.is_authenticated %}
         <li>
             <a href="{% url django.contrib.auth.views.logout %}" title="{% trans 'Logout' %}" class="logout">{% trans 'Logout' %}</a>
         </li>

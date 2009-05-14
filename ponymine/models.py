@@ -53,6 +53,9 @@ class Project(models.Model):
     class Meta:
         ordering = ('name',)
         unique_together = ('parent', 'slug')
+        permissions = (
+            ('configure_project', _('Can configure project')),
+        )
 
 class Attribute(models.Model):
     """
@@ -166,7 +169,7 @@ class Ticket(models.Model):
     priority = models.ForeignKey(Priority, default=Priority.objects.default)
     subject = models.CharField(max_length=100)
     description = models.TextField()
-    keywords = models.TextField(blank=True)
+    keywords = models.CharField(max_length=200, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 

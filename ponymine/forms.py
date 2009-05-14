@@ -5,15 +5,14 @@ from ponymine.models import Ticket, Project, Membership, Status
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        exclude = ('reported_by',)
+        exclude = ('reported_by', 'project')
 
     def limit_assignable_users(self, queryset):
         """
         Limits the users who may be assigned a ticket to those who are members
         of a project.
         """
-        self.fields['assigned_to'] = forms.ModelChoiceField(queryset=queryset,
-                                                            empty_label=None)
+        self.fields['assigned_to'] = forms.ModelChoiceField(queryset=queryset)
 
 class UpdateTicketForm(TicketForm):
     notes = forms.CharField(widget=forms.Textarea, required=False,

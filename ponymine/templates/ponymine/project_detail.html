@@ -1,18 +1,6 @@
-{% extends "ponymine/base.html" %}
+{% extends 'ponymine/base_project.html' %}
 {% load i18n %}
 
-{% block title %}{{ project.name }}{% endblock %}
-
-{% block ponymine-content %}
-<h2>{{ project.name }}</h2>
-
-<a href="{% url ponymine_edit_project project.path %}">{% trans 'Modify' %}</a>
-
-<table id="project-props">
-    {# insert project properties here #}
-</table>
-<pre>{{ project }}</pre>
-<pre>{{ project.ticket_set }}</pre>
-
+{% block ponymine-project-content %}
 {% include 'ponymine/_ticket_table.html' %}
 {% endblock %}
