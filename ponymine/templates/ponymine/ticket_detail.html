@@ -64,7 +64,7 @@
 <ul class="ticket-logs">{% endif %}
     <li class="log-{% cycle 'odd' 'even' %}">
         <div class="change-info">
-            <a href="#log-{{ log.id }}" id="log-{{ log.id }}">#{{ log.id }}</a>
+            <a href="#log-{{ log.id }}" id="log-{{ log.id }}">#{{ forloop.counter }}</a>
             {{ log.date_created|date:"M jS, Y, P" }} - {{ log.created_by }}
         </div>
 
