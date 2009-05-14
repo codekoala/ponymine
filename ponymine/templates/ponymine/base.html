@@ -10,6 +10,9 @@
         <li>
             <a href="{% url ponymine_overview %}" title="{% trans 'Overview' %}" class="overview">{% trans 'Home' %}</a>
         </li>
+        <li>
+            <a href="{% url ponymine_project_list %}">{% trans 'Projects' %}</a>
+        </li>
         {% if project.id %}
         <li>
             <a href="{% url ponymine_view_project project.path %}" title="{% trans 'Project homepage' %}" class="view-project">{% trans 'Project Summary' %}</a>

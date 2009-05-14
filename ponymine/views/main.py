@@ -9,8 +9,10 @@ def overview(request, template='ponymine/overview.html'):
     """
     data = {}
 
+    # TODO: make this get all projects to which a user has access
+    # (think membership of private projects)
     # get 5 projects
-    proj_paginator = Paginator(Project.objects.active(), 5, orphans=3)
+    proj_paginator = Paginator(Project.objects.public(), 5, orphans=3)
     proj_page = proj_paginator.page(1)
 
     # get 5 latest tickets

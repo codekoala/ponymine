@@ -8,7 +8,25 @@ from django.template import RequestContext
 from ponymine.forms import ProjectForm, MembershipForm
 from ponymine.models import Project, Membership, Ticket
 
-def view_project(request, path, page=1, template="ponymine/project_detail.html"):
+def project_list(request, page=1, template='ponymine/project_list.html'):
+    """
+    Displays a list of projects
+    """
+    data = {}
+
+    # TODO: make this retrieve all projects that a user has access to
+    # (think membership in private projects)
+    projects = Project.objects.public()
+    paginator = Paginator(projects, 50, orphans=5)
+    page_obj = paginator.page(page)
+
+    data['page'] = page_obj
+    data['paginator'] = paginator
+    data['project_list'] = page_obj.object_list
+
+    return render(template, data, context_instance=RequestContext(request))
+
+def view_project(request, path, page=1, template='ponymine/project_detail.html'):
     """
     Displays information about the project indicated by `path`
     """

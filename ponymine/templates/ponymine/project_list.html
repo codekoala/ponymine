@@ -1,0 +1,10 @@
+{% extends "ponymine/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Project List' %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% trans 'Project List' %}</h2>
+
+{% include 'ponymine/_project_table.html' %}
+{% endblock %}

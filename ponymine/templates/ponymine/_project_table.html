@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<table class="project-table">
+    <tr class="header">
+        <th class="project-name">
+            {% trans 'Project' %}
+        </th>
+        <th class="project-parent">
+            {% trans 'Child Of' %}
+        </th>
+        <th class="project-members">
+            {% trans 'Members' %}
+        </th>
+        <th class="project-tickets">
+            {% trans 'Tickets' %}
+        </th>
+    </tr>
+    {% for project in project_list %}
+    {% include 'ponymine/_project_table_row.html' %}
+    {% empty %}
+    <tr>
+        <td class="no-projects" colspan="4">
+            {% trans 'No projects to display' %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,20 @@
+{% load i18n humanize %}
+<tr class="row-{% cycle 'odd' 'even' %}">
+    <td class="project-name">
+        <a href="{{ project.get_absolute_url }}">{{ project.name }}</a>
+    </td>
+    <td class="project-parent">
+        {% if project.parent %}
+        <a href="{{ project.parent.get_absolute_url }}">{{ project.parent.hierarchy }}</a>
+        {% else %}
+        -
+        {% endif %}
+        {{ ticket.ticket_type }}
+    </td>
+    <td class="project-members">
+        {{ project.members.count|intcomma }}
+    </td>
+    <td class="project-tickets">
+        {{ project.tickets.count|intcomma }}
+    </td>
+</tr>

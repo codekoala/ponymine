@@ -9,6 +9,9 @@ urlpatterns = patterns('',
     url(r'^project/(?P<path>.+)/page/(?P<page>\d+)/$', projects.view_project,
         name='ponymine_view_project_page'),
 
+    url(r'^projects/(?P<page>\d+)/$', projects.project_list, name='ponymine_project_list_page'),
+    url(r'^projects/$', projects.project_list, name='ponymine_project_list'),
+
     url(r'^ticket/(?P<path>.+)/new/$', tickets.create_ticket, name='ponymine_create_ticket'),
     url(r'^ticket/(?P<ticket_id>\d+)/edit/$', tickets.edit_ticket, name='ponymine_edit_ticket'),
     url(r'^ticket/(?P<ticket_id>\d+)/update/$',

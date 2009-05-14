@@ -1,6 +1,8 @@
 {% extends "ponymine/base.html" %}
 {% load i18n %}
 
+{% block title %}{{ project.name }}{% endblock %}
+
 {% block ponymine-content %}
 <h2>{{ project.name }}</h2>
 

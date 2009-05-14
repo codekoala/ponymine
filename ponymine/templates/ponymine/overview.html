@@ -20,15 +20,9 @@
 <fieldset>
     <legend>{% trans 'Projects' %}</legend>
 
-    <ul>
-    {% for project in projects.page.object_list %}
-        <li>
-            <a href="{{ project.get_absolute_url }}">
-                {{ project.name }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
+    {% with projects.page.object_list as project_list %}
+    {% include 'ponymine/_project_table.html' %}
+    {% endwith %}
 </fieldset>
 
 <fieldset>

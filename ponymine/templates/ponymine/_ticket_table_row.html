@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n humanize %}
 <tr class="row-{% cycle 'odd' 'even' %}">
     <td class="ticket-id">
         <a href="{{ ticket.get_absolute_url }}">{{ ticket.id }}</a>
@@ -19,6 +19,7 @@
         {{ ticket.assigned_to|default:'-' }}
     </td>
     <td class="ticket-updated">
-        {{ ticket.date_updated }}
+        {{ ticket.date_updated|naturalday }},
+        {{ ticket.date_updated|date:"P" }}
     </td>
 </tr>
