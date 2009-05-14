@@ -1,15 +1,101 @@
-{% extends "base.html" %}
+{% extends "ponymine/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ ticket.subject }}{% endblock %}
+{% block title %}{% trans 'Ticket' %} {{ ticket.id }}: {{ ticket.subject }} ({{ ticket.project }}){% endblock %}
 
-{% block content %}
+{% block ponymine-content %}
+<div class="ticket-info">
+    <h2>{{ ticket.ticket_type }} #{{ ticket.id }}</h2>
+    <h3>{{ ticket.subject }}</h3>
 
-<h2>{{ ticket.subject }}</h2>
+    <div id="ticket-options">
+        <a href="edit/">{% trans 'Edit' %}</a>
+    </div>
 
-<div id="ticket_options">
-	<a href="edit/">Edit</a>
+    <div class="creation">
+        {% trans 'Added by' %} {{ ticket.reported_by|default:'anonymous' }}
+        {% trans 'about' %} {{ ticket.date_created|timesince }} {% trans 'ago' %}.
+
+        {% trans 'Updated' %} {{ ticket.date_updated|timesince }} {% trans 'ago' %}.
+    </div>
+
+    <table class="ticket-details">
+        <tr>
+            <th>{% trans 'Status' %}:</th>
+            <td>{{ ticket.status|default:"-" }}</td>
+            <th>{% trans 'Created' %}:</th>
+            <td>{{ ticket.date_created|date:"m/d/Y" }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Priority' %}:</th>
+            <td>{{ ticket.priority|default:"-" }}</td>
+            <th>{% trans 'Assigned to' %}:</th>
+            <td>{{ ticket.assigned_to|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Component' %}:</th>
+            <td>{{ ticket.component|default:"-" }}</td>
+            <th>{% trans 'Keywords' %}:</th>
+            <td>
+                {% for keyword in ticket.keyword_list %}
+                <a href="{% url ponymine_tickets_with_keyword keyword %}">{{ keyword }}</a>
+                {% empty %}
+                -
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    <div class="description">
+        {{ ticket.description }}
+    </div>
 </div>
 
-<p>{{ ticket.description }}</p>
+<form action="{% url ponymine_update_ticket ticket.id %}" method="get">
+    {{ change_status_form.as_p }}
+
+    <label for="btn_change_status">&nbsp;</label>
+    <input type="submit" value="{% trans 'Change Status' %}" />
+</form>
+
+{% for log in ticket.log_set.all %}
+{% if forloop.first %}<h3>{% trans 'Ticket History' %}</h3>
+
+<ul class="ticket-logs">{% endif %}
+    <li class="log-{% cycle 'odd' 'even' %}">
+        <div class="change-info">
+            <a href="#log-{{ log.id }}" id="log-{{ log.id }}">#{{ log.id }}</a>
+            {{ log.date_created|date:"M jS, Y, P" }} - {{ log.created_by }}
+        </div>
+
+        {% for change in log.changes.all %}
+        {% if forloop.first %}<ul class="log-changes">{% endif %}
+            {% if change.content_type %}
+            <li>
+                <strong>{{ change.content_type|title }}</strong>
+                {% if change.old_object and change.new_object %}
+                {% trans 'changed from' %} <span class="change-value">{{ change.old_object }}</span>
+                {% trans 'to' %} <span class="change-value">{{ change.new_object }}</span>
+                {% endif %}
+
+                {% if change.old_object and not change.new_object %}
+                {% trans 'removed' %}
+                {% endif %}
+
+                {% if change.new_object and not change.old_object %}
+                {% trans 'set to' %} <span class="change-value">{{ change.new_object }}</span>
+                {% endif %}
+            </li>
+            {% endif %}
+        {% if forloop.last %}</ul>{% endif %}
+        {% endfor %}
+
+        <div class="notes">
+            {{ log.notes }}
+        </div>
+    </li>
+{% if forloop.last %}</ul>{% endif %}
+{% empty %}
+{% endfor %}
 
 {% endblock %}

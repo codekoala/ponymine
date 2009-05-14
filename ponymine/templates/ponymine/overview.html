@@ -3,34 +3,39 @@
 
 {% block title %}{% trans 'Overview' %}{% endblock %}
 
-{% block content %}
+{% block ponymine-content %}
 <h2>{% trans 'Overview' %}</h2>
 
+{% if user.is_authenticated %}
 <fieldset>
-	<legend>Projects</legend>
+    <legend>{% trans 'My Tickets' %}</legend>
 
-	<ul>
-	{% for project in projects.page.object_list %}
-		<li>
-			<a href="{{ project.get_absolute_url }}">
-				{{ project.name }}
-			</a>
-		</li>
-	{% endfor %}
-	</ul>
+    {% with my_tickets.page.object_list as ticket_list %}
+    {% include 'ponymine/_ticket_table.html' %}
+    {% endwith %}
+    </table>
+</fieldset>
+{% endif %}
+
+<fieldset>
+    <legend>{% trans 'Projects' %}</legend>
+
+    <ul>
+    {% for project in projects.page.object_list %}
+        <li>
+            <a href="{{ project.get_absolute_url }}">
+                {{ project.name }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
 </fieldset>
 
 <fieldset>
-	<legend>Latest Tickets</legend>
+    <legend>{% trans 'Latest Tickets' %}</legend>
 
-	<ul>
-	{% for ticket in tickets.page.object_list %}
-		<li>
-			<a href="{{ ticket.get_absolute_url }}">
-				{{ ticket.name }}
-			</a>
-		</li>
-	{% endfor %}
-	</ul>
+    {% with latest_tickets.page.object_list as ticket_list %}
+    {% include 'ponymine/_ticket_table.html' %}
+    {% endwith %}
 </fieldset>
 {% endblock %}

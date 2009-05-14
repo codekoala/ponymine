@@ -1,0 +1,24 @@
+{% load i18n %}
+<tr class="row-{% cycle 'odd' 'even' %}">
+    <td class="ticket-id">
+        <a href="{{ ticket.get_absolute_url }}">{{ ticket.id }}</a>
+    </td>
+    <td class="ticket-type">
+        {{ ticket.ticket_type }}
+    </td>
+    <td class="ticket-status">
+        {{ ticket.status }}
+    </td>
+    <td class="ticket-priority">
+        {{ ticket.priority }}
+    </td>
+    <td class="ticket-subject">
+        {{ ticket.project.name }} - <a href="{{ ticket.get_absolute_url }}">{{ ticket.subject }}</a>
+    </td>
+    <td class="ticket-assigned-to">
+        {{ ticket.assigned_to|default:'-' }}
+    </td>
+    <td class="ticket-updated">
+        {{ ticket.date_updated }}
+    </td>
+</tr>

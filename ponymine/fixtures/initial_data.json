@@ -1,0 +1,154 @@
+[
+    {
+        "pk": 1,
+        "model": "ponymine.role",
+        "fields": {
+            "name": "Manager",
+            "slug": "manager",
+            "permissions": []
+        }
+    },
+    {
+        "pk": 2,
+        "model": "ponymine.role",
+        "fields": {
+            "name": "Developer",
+            "slug": "developer",
+            "permissions": []
+        }
+    },
+    {
+        "pk": 3,
+        "model": "ponymine.role",
+        "fields": {
+            "name": "Reporter",
+            "slug": "reporter",
+            "permissions": []
+        }
+    },
+
+    {
+        "pk": 1,
+        "model": "ponymine.tickettype",
+        "fields": {
+            "name": "Bug",
+            "slug": "bug",
+            "is_default": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "ponymine.tickettype",
+        "fields": {
+            "name": "Enhancement",
+            "slug": "enhancement",
+            "is_default": 0
+        }
+    },
+    {
+        "pk": 3,
+        "model": "ponymine.tickettype",
+        "fields": {
+            "name": "Maintenance",
+            "slug": "maintenance",
+            "is_default": 0
+        }
+    },
+
+    {
+        "pk": 1,
+        "model": "ponymine.priority",
+        "fields": {
+            "name": "Urgent",
+            "slug": "urgent",
+            "order": 500,
+            "is_default": 0
+        }
+    },
+    {
+        "pk": 2,
+        "model": "ponymine.priority",
+        "fields": {
+            "name": "High",
+            "slug": "high",
+            "order": 100,
+            "is_default": 0
+        }
+    },
+    {
+        "pk": 3,
+        "model": "ponymine.priority",
+        "fields": {
+            "name": "Normal",
+            "slug": "normal",
+            "order": 50,
+            "is_default": 1
+        }
+    },
+    {
+        "pk": 4,
+        "model": "ponymine.priority",
+        "fields": {
+            "name": "Low",
+            "slug": "low",
+            "order": 0,
+            "is_default": 0
+        }
+    },
+
+    {
+        "pk": 1,
+        "model": "ponymine.status",
+        "fields": {
+            "name": "New",
+            "slug": "new",
+            "order": 0,
+            "is_default": 1,
+            "is_closed": 0
+        }
+    },
+    {
+        "pk": 2,
+        "model": "ponymine.status",
+        "fields": {
+            "name": "Assigned",
+            "slug": "assigned",
+            "order": 1,
+            "is_default": 0,
+            "is_closed": 0
+        }
+    },
+    {
+        "pk": 3,
+        "model": "ponymine.status",
+        "fields": {
+            "name": "Resolved",
+            "slug": "resolved",
+            "order": 2,
+            "is_default": 0,
+            "is_closed": 0
+        }
+    },
+    {
+        "pk": 4,
+        "model": "ponymine.status",
+        "fields": {
+            "name": "Closed",
+            "slug": "Closed",
+            "order": 3,
+            "is_default": 0,
+            "is_closed": 1
+        }
+    },
+    {
+        "pk": 5,
+        "model": "ponymine.status",
+        "fields": {
+            "name": "Rejected",
+            "slug": "rejected",
+            "order": 4,
+            "is_default": 0,
+            "is_closed": 1
+        }
+    }
+]

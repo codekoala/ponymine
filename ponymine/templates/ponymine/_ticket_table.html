@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<table class="ticket-table">
+    <tr class="header">
+        <th class="ticket-id">
+            {% trans 'ID' %}
+        </th>
+        <th class="ticket-type">
+            {% trans 'Type' %}
+        </th>
+        <th class="ticket-status">
+            {% trans 'Status' %}
+        </th>
+        <th class="ticket-priority">
+            {% trans 'Priority' %}
+        </th>
+        <th class="ticket-subject">
+            {% trans 'Subject' %}
+        </th>
+        <th class="ticket-assigned-to">
+            {% trans 'Assigned To' %}
+        </th>
+        <th class="ticket-updated">
+            {% trans 'Updated' %}
+        </th>
+    </tr>
+    {% for ticket in ticket_list %}
+    {% include 'ponymine/_ticket_table_row.html' %}
+    {% empty %}
+    <tr>
+        <td class="no-tickets" colspan="7">
+            {% trans 'No tickets to display' %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

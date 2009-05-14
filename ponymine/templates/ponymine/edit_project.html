@@ -1,0 +1,45 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if project.id %}{% trans 'Edit Project' %}{% else %}{% trans 'New Project' %}{% endif %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% if project.id %}{% trans 'Edit Project' %}{% else %}{% trans 'New Project' %}{% endif %}</h2>
+
+<form action="." method="post">
+    <table class="project-form">
+        {{ form }}
+    </table>
+    <table class="project-memberships">
+        <tr>
+            <th>{% trans 'User' %}</th>
+            <th>{% trans 'Role' %}</th>
+        </tr>
+        {{ membership_forms.management_form }}
+        {% for mem_form in membership_forms.forms %}
+        {% if mem_form.errors %}<tr>
+            <td class="errors" colspan="3">
+            {{ mem_form.errors }}
+            </td>
+        </tr>{% endif %}
+        <tr>
+            <td class="membership-user">
+                {{ mem_form.user }}
+            </td>
+            <td class="membership-role">
+                {{ mem_form.role }}
+            </td>
+            <td class="membership-remove">
+                {{ mem_form.remove }} {{ mem_form.remove.label_tag }}
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2">
+                <label for="btn_save">&nbsp;</label>
+                <input type="submit" id="btn_save" value="{% trans 'Save' %}" />
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

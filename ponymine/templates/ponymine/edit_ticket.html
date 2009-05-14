@@ -1,0 +1,20 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if ticket.id %}{% trans 'Edit Ticket' %}{% else %}{% trans 'New Ticket' %}{% endif %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% if ticket.id %}{% trans 'Edit Ticket' %}{% else %}{% trans 'New Ticket' %}{% endif %}</h2>
+
+<form action="" method="post">
+    <table class="ticket-form">
+        {{ form }}
+        <tr>
+            <td colspan="2">
+                <label for="btn_save">&nbsp;</label>
+                <input type="submit" id="btn_save" value="{% trans 'Save' %}" />
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

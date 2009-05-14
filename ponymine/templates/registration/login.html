@@ -1,0 +1,31 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Please Login' %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% trans 'Please Login' %}</h2>
+
+<p>
+    {% blocktrans %}You must be authorized to view certain areas of this
+    utility.  Please authenticate yourself using the form below.{% endblocktrans %}
+</p>
+
+<p>
+    {% trans 'If you do not have an account, you may' %}
+    <a href="{% url registration.views.register %}">{% trans 'create one' %}</a>
+    {% trans 'for free.' %}
+</p>
+
+<form action="" method="post">
+<table class="login-form">
+    {{ form }}
+    <tr>
+        <td colspan="2" class="buttons">
+            <label for="btn_login">&nbsp;</label>
+            <input type="submit" id="btn_login" value="Login" />
+        </td>
+    </tr>
+</table>
+</form>
+{% endblock %}

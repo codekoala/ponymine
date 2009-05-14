@@ -1,9 +1,40 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}Ponymine{% endblock %}
 
 {% block content %}
 <!-- header //-->
+<div class="ponymine-navigation">
+    <ul>
+        <li>
+            <a href="{% url ponymine_overview %}" title="{% trans 'Overview' %}" class="overview">{% trans 'Home' %}</a>
+        </li>
+        {% if project.id %}
+        <li>
+            <a href="{% url ponymine_view_project project.path %}" title="{% trans 'Project homepage' %}" class="view-project">{% trans 'Project Summary' %}</a>
+        </li>
+        <li>
+            <a href="{% url ponymine_create_ticket project.path %}" title="{% trans 'Create a new ticket' %}" class="btn-add add-ticket">{% trans 'New Ticket' %}</a>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <li>
+            <a href="{% url ponymine_create_project %}" title="{% trans 'Create a new project' %}" class="btn-add add-project">{% trans 'New Project' %}</a>
+        </li>
+        <li>
+            <a href="{% url django.contrib.auth.views.logout %}" title="{% trans 'Logout' %}" class="logout">{% trans 'Logout' %}</a>
+        </li>
+        {% else %}
+        <li>
+            <a href="{% url django.contrib.auth.views.login %}" title="{% trans 'Login' %}" class="login">{% trans 'Login' %}</a>
+        </li>
+        <li>
+            <a href="{% url registration.views.register %}" title="{% trans 'Register' %}" class="register">{% trans 'Register' %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
 {% block ponymine-content %}{% endblock %}
 <!-- footer //-->
 {% endblock %}

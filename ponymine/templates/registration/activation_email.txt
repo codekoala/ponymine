@@ -1,0 +1,9 @@
+{% load i18n %}
+{% trans 'Thank you for creating an account at' %} {{ site.name }}!
+
+{% trans 'You have' %} {{ expiration_days }} {% blocktrans %}days to activate this account.
+Failure to do so will require you to re-register your account.  If you have any
+questions, please do not hesitate to ask us!
+
+Thanks!
+The{% endblocktrans %} {{ site.name }} {% trans 'Team' %}

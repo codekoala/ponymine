@@ -1,0 +1,29 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create Account' %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% trans 'Create Account' %}</h2>
+
+<p>
+    {% blocktrans %}Please complete the form below to create your own user
+    account.  If you already have an account, please{% endblocktrans %}
+    <a href="{% url django.contrib.auth.views.login %}">{% trans 'login' %}</a>.
+</p>
+
+<form action="" method="post">
+<table class="login-form">
+    {{ form }}
+    <tr>
+        <td colspan="2" class="buttons">
+            <label for="btn_reset">&nbsp;</label>
+            <input type="reset" id="btn_reset" value="{% trans 'Clear Fields' %}" />
+
+            <label for="btn_register">&nbsp;</label>
+            <input type="submit" id="btn_register" value="{% trans 'Create Account' %}" />
+        </td>
+    </tr>
+</table>
+</form>
+{% endblock %}

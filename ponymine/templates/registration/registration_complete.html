@@ -1,0 +1,21 @@
+{% extends 'ponymine/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Account Created' %}{% endblock %}
+
+{% block ponymine-content %}
+<h2>{% trans 'Account Created' %}</h2>
+
+<p>
+    {% blocktrans %}Your new account has been created successfully!  Before you
+    can use this account, it <strong>must be activated</strong>.  You should
+    receive an e-mail in your inbox at the address you specified during
+    registration.  Follow the instructions contained therein and you will be
+    able to login and use your new account.{% endblocktrans %}
+</p>
+
+<p>
+    {% blocktrans %}If the e-mail does not show up in your inbox within an hour,
+    please check you spam or junk mail folders.{% endblock %}
+</p>
+{% endblock %}

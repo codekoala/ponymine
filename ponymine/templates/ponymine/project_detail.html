@@ -1,22 +1,16 @@
-{% extends "base.html" %}
+{% extends "ponymine/base.html" %}
+{% load i18n %}
 
-{% block content %}
-
+{% block ponymine-content %}
 <h2>{{ project.name }}</h2>
 
+<a href="{% url ponymine_edit_project project.path %}">{% trans 'Modify' %}</a>
+
 <table id="project-props">
-	{# insert project properties here #}
+    {# insert project properties here #}
 </table>
-<div id="project-options">
-	<a href="{% url ponymine_create_ticket %}?project={{ project.id }}">
-		New Ticket</a>
-</div>
 <pre>{{ project }}</pre>
 <pre>{{ project.ticket_set }}</pre>
-<ul>
-	{% for ticket in project.tickets.all %}
-	<li><a href="{{ ticket.get_absolute_url }}">{{ ticket }}</a></li>
-	{% endfor %}
-</ul>
 
+{% include 'ponymine/_ticket_table.html' %}
 {% endblock %}
