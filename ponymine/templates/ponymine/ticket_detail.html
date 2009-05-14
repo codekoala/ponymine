@@ -72,7 +72,7 @@
         {% if forloop.first %}<ul class="log-changes">{% endif %}
             {% if change.content_type %}
             <li>
-                <strong>{{ change.content_type|title }}</strong>
+                <strong>{{ change.label }}</strong>
                 {% if change.old_object and change.new_object %}
                 {% trans 'changed from' %} <span class="change-value">{{ change.old_object }}</span>
                 {% trans 'to' %} <span class="change-value">{{ change.new_object }}</span>

@@ -203,12 +203,30 @@ class ChangeLog(models.Model):
     """
     Keeps track of which attributes about a ticket have changed.
     """
+    TYPES = {
+        'component': _('Component'),
+        'priority': _('Priority'),
+        'project': _('Project'),
+        'status': _('Status'),
+        'ticket type': _('Ticket Type'),
+        'user': _('Assigned To'),
+    }
+
     log = models.ForeignKey(Log, related_name='changes')
     content_type = models.ForeignKey(ContentType, null=True)
     old_id = models.PositiveIntegerField(null=True)
     new_id = models.PositiveIntegerField(null=True)
     old_object = generic.GenericForeignKey(ct_field='content_type', fk_field='old_id')
     new_object = generic.GenericForeignKey(ct_field='content_type', fk_field='new_id')
+
+    def _get_attribute_label(self):
+        """
+        Returns a label that makes sense for tickets based on the content
+        type.  This also helps with internationalization.
+        """
+        return ChangeLog.TYPES.get(self.content_type.name,
+                                   _(self.content_type.name))
+    label = property(_get_attribute_label)
 
     def __unicode__(self):
         return u'%s: %s (%s => %s)' % (self.log.ticket,
