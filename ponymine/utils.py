@@ -1,7 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
+from django.http import Http404
 from ponymine.models import Log, ChangeLog, Project
 
-def get_project_or_new(path):
+def get_project_or_new(path, user=None):
     """
     Attempts to find a project described by `path`.  If one cannot be found,
     an empty Project object is returned.
@@ -9,12 +10,20 @@ def get_project_or_new(path):
     project = None
 
     if path:
-        project = Project.objects.with_path(path)
+        project = Project.objects.with_path(path, user)
 
     # `with_path` may return None, so this ensures that we always have a project
     project = project or Project()
 
     return project
+
+def check_membership(project, user):
+    """
+    Raises an HTTP 404 error if `user` is not a member of `project` and the
+    project is not public.
+    """
+    if not project.is_public and not project.is_member(user):
+        raise Http404
 
 def create_change_logs(request, old_ticket, new_ticket, notes=''):
     """

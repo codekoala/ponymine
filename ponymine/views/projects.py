@@ -7,7 +7,8 @@ from django.shortcuts import render_to_response as render
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from ponymine.forms import ProjectForm, MembershipForm
-from ponymine.models import Project, Membership, Ticket, TicketType, Role, Membership
+from ponymine.models import Project, Membership, Ticket, TicketType, Role, \
+    Membership
 from ponymine import utils
 
 def project_list(request, page=1, template='ponymine/project_list.html'):
@@ -18,7 +19,7 @@ def project_list(request, page=1, template='ponymine/project_list.html'):
 
     # TODO: make this retrieve all projects that a user has access to
     # (think membership in private projects)
-    projects = Project.objects.public()
+    projects = Project.objects.for_user(request.user)
     paginator = Paginator(projects, 50, orphans=5)
     page_obj = paginator.page(page)
 
@@ -35,11 +36,13 @@ def project_summary(request, path, template='ponymine/project_summary.html'):
     """
     data = {}
 
-    project = Project.objects.with_path(path)
+    project = Project.objects.with_path(path, request.user)
 
     # raise a 404 if no project matches the path
     if not project:
         raise Http404()
+
+    utils.check_membership(project, request.user)
 
     data['title'] = _('Summary')
     data['project'] = project
@@ -55,7 +58,7 @@ def view_project_tickets(request, path, page=1,
     """
     data = {}
 
-    project = Project.objects.with_path(path)
+    project = Project.objects.with_path(path, request.user)
 
     # raise a 404 if no project matches the path
     if not project:
@@ -89,7 +92,7 @@ def edit_project(request, path=None, template='ponymine/edit_project.html',
     Allows authorized users to create and edit projects
     """
     data = {}
-    project = utils.get_project_or_new(path)
+    project = utils.get_project_or_new(path, request.user)
 
     user_count = User.objects.count()
     MembershipFormSet = formset_factory(MembershipForm,
@@ -110,11 +113,11 @@ def edit_project(request, path=None, template='ponymine/edit_project.html',
             # set the memberships for this project
             for info in memberships.cleaned_data:
                 # make sure we're not supposed to be removing this membership
-                if not info['remove']:
+                if len(info) and not info.get('remove', False):
                     membership = Membership.objects.create(
                                     project=new_proj,
-                                    user=info['user'],
-                                    role=info['role'])
+                                    user=info.get('user'),
+                                    role=info.get('role'))
 
             # redirect the user to the proper page
             if not redirect_url:

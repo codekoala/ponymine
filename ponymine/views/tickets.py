@@ -17,6 +17,8 @@ def view_ticket(request, ticket_id, template='ponymine/ticket_detail.html'):
     data = {}
     ticket = get_object_or_404(Ticket, pk=ticket_id)
 
+    utils.check_membership(ticket.project, request.user)
+
     data['title'] = ticket.__unicode__()
     data['ticket'] = ticket
     data['project'] = ticket.project
@@ -30,7 +32,7 @@ def create_ticket(request, path, template='ponymine/edit_ticket.html',
     """
     Wraps `edit_ticket` so that we can use a different decorator
     """
-    project = Project.objects.with_path(path)
+    project = Project.objects.with_path(path, request.user)
 
     # you should never create a ticket when not looking at a specific project
     if not project:
@@ -58,6 +60,8 @@ def edit_ticket(request, ticket_id=None, project=None,
         ticket = Ticket(project=project)
 
     data['ticket'] = ticket
+
+    utils.check_membership(project, request.user)
 
     if request.method == "POST":
         form = form_class(request.POST, instance=ticket)

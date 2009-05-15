@@ -19,7 +19,7 @@ class Project(models.Model):
     description = models.TextField(blank=True)
     homepage = models.URLField(verify_exists=True, **BLNL)
     members = models.ManyToManyField(User, through='Membership')
-    is_public = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False, help_text=_('If this project is a child of any project that is private, it too will be private automatically.'))
     is_active = models.BooleanField(default=True)
     site = models.ForeignKey(Site, default=Site.objects.get_current)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -28,27 +28,50 @@ class Project(models.Model):
     objects = ProjectManager()
 
     def __unicode__(self):
-        return self.name
+        return self.hierarchy_str
 
     def get_absolute_url(self):
-        return ('ponymine_view_project', [], {'path': self.path})
+        return ('ponymine_view_project_summary', [], {'path': self.path})
     get_absolute_url = models.permalink(get_absolute_url)
+
+    def is_member(self, user):
+        return bool(user.is_superuser or user in self.members.all())
 
     def get_path_list(self):
         """
         Returns a list of project slugs that act as the "path" to this project
         """
-        me = (self.slug,)
-        if self.parent:
-            return self.parent.get_path_list() + me
-        return me
+        return tuple(p.slug for p in self.hierarchy)
 
     def _get_path(self):
         return '/'.join(self.get_path_list())
     path = property(_get_path)
 
-    def hierarchy(self):
-        return u' :: '.join(self.get_path_list())
+    def _get_hierarchy(self):
+        me = (self,)
+        if self.parent:
+            return self.parent.hierarchy + me
+        return me
+    hierarchy = property(_get_hierarchy)
+
+    def _get_hierarchy_str(self):
+        names = [p.name for p in self.hierarchy]
+        return u': '.join(names)
+    hierarchy_str = property(_get_hierarchy_str)
+
+    def save(self, *args, **kwargs):
+        """
+        Ensures that a project which is a descendant of a private project is
+        always marked private as well.
+        """
+        if self.is_public:
+            for project in self.hierarchy:
+                if not project.is_public:
+                    self.is_public = False
+                    print 'HERE!!'
+                    break
+
+        super(Project, self).__init__(*args, **kwargs)
 
     class Meta:
         ordering = ('name',)
@@ -153,11 +176,23 @@ class TicketManager(models.Manager):
         super(TicketManager, self).__init__(*args, **kwargs)
         self.closed = [st.id for st in Status.objects.filter(is_closed=True)]
 
-    def closed(self):
-        return self.get_query_set().filter(status__id__in=self.closed)
+    def closed(self, user=None):
+        qs = self.get_query_set().filter(status__id__in=self.closed)
+        return self._filter_for_user(qs, user)
 
-    def open(self):
-        return self.get_query_set().exclude(status__id__in=self.closed)
+    def open(self, user=None):
+        qs = self.get_query_set().exclude(status__id__in=self.closed)
+        return self._filter_for_user(qs, user)
+
+    def _filter_for_user(self, qs, user=None):
+        """
+        Finds tickets that this user has based on the projects that the user
+        is a member of in some way.
+        """
+        if isinstance(user, User):
+            user_project_ids = [m.project.id for m in user.membership_set.all()]
+            qs = qs.filter(project__id__in=user_project_ids)
+        return qs.distinct()
 
 class Ticket(models.Model):
     project = models.ForeignKey(Project, related_name='tickets')

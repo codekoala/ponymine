@@ -5,7 +5,7 @@
     </td>
     <td class="project-parent">
         {% if project.parent %}
-        <a href="{{ project.parent.get_absolute_url }}">{{ project.parent.hierarchy }}</a>
+        <a href="{{ project.parent.get_absolute_url }}">{{ project.parent.hierarchy_str }}</a>
         {% else %}
         -
         {% endif %}
