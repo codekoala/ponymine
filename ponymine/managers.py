@@ -7,7 +7,7 @@ class ProjectManager(models.Manager):
         return super(ProjectManager, self).get_query_set().filter(site__exact=Site.objects.get_current())
 
     def active(self, user=None):
-        qs = self.get_query_set().filter(is_active=True)
+        qs = self.filter(is_active=True)
 
         # refine the list based on the current user
         if isinstance(user, User):
@@ -68,6 +68,6 @@ class ProjectManager(models.Manager):
 class AttributeWithDefaultManager(models.Manager):
     def default(self):
         try:
-            return self.get_query_set().get(is_default=True)
+            return self.get(is_default=True)
         except models.ObjectDoesNotExist:
             return None

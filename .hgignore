@@ -1,4 +1,5 @@
 syntax: glob
 *.pyc
+*.swp
 ponymine.tmproj
 projects/*/*.db

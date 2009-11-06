@@ -68,7 +68,6 @@ class Project(models.Model):
             for project in self.hierarchy:
                 if not project.is_public:
                     self.is_public = False
-                    print 'HERE!!'
                     break
 
         super(Project, self).__init__(*args, **kwargs)
@@ -77,7 +76,7 @@ class Project(models.Model):
         ordering = ('name',)
         unique_together = ('parent', 'slug')
         permissions = (
-            ('configure_project', _('Can configure project')),
+            ('configure_project', 'Can configure project'),
         )
 
 class Attribute(models.Model):
@@ -174,14 +173,21 @@ class TicketManager(models.Manager):
     """
     def __init__(self, *args, **kwargs):
         super(TicketManager, self).__init__(*args, **kwargs)
-        self.closed = [st.id for st in Status.objects.filter(is_closed=True)]
+        self._closed = None
+
+    def closed(self):
+        if self._closed == None:
+            self._closed = [st.id for st in Status.objects.filter(is_closed=True)]
+        return self._closed
+    closed = property(closed)
 
     def closed(self, user=None):
-        qs = self.get_query_set().filter(status__id__in=self.closed)
+        print self.closed
+        qs = self.filter(status__id__in=self.closed)
         return self._filter_for_user(qs, user)
 
     def open(self, user=None):
-        qs = self.get_query_set().exclude(status__id__in=self.closed)
+        qs = self.exclude(status__id__in=self.closed)
         return self._filter_for_user(qs, user)
 
     def _filter_for_user(self, qs, user=None):
