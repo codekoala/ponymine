@@ -1,10 +1,10 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
-#admin.autodiscover()
+admin.autodiscover()
 
 urlpatterns = patterns('',
-    #(r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)),
     (r'^accounts/', include('registration.urls')),
     (r'^', include('ponymine.urls')),
 )

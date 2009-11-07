@@ -3,6 +3,7 @@
 
 {% block ponymine-project-content %}
 <form action="." method="post">
+    {% csrf_token %}
     <table class="project-form">
         {{ form }}
     </table>

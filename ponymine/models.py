@@ -175,19 +175,18 @@ class TicketManager(models.Manager):
         super(TicketManager, self).__init__(*args, **kwargs)
         self._closed = None
 
-    def closed(self):
+    def closed_statuses(self):
         if self._closed == None:
             self._closed = [st.id for st in Status.objects.filter(is_closed=True)]
         return self._closed
-    closed = property(closed)
+    closed_statuses = property(closed_statuses)
 
     def closed(self, user=None):
-        print self.closed
-        qs = self.filter(status__id__in=self.closed)
+        qs = self.filter(status__id__in=self.closed_statuses)
         return self._filter_for_user(qs, user)
 
     def open(self, user=None):
-        qs = self.exclude(status__id__in=self.closed)
+        qs = self.exclude(status__id__in=self.closed_statuses)
         return self._filter_for_user(qs, user)
 
     def _filter_for_user(self, qs, user=None):

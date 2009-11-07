@@ -29,7 +29,11 @@ class ChangeStatusForm(forms.Form):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        exclude = ('members',)
+        exclude = ('slug', 'members', 'site')
+
+        # don't show the parent dropdown if we have no projects yet
+        if Project.objects.count() == 0:
+            exclude += ('parent', )
 
     def update_parents(self, project):
         """
